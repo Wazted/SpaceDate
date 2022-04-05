@@ -1,0 +1,1 @@
+export const SET_DATE = 'GET_DATE';

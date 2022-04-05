@@ -12,13 +12,21 @@ import {
   IconButton,
   useColorMode,
   useColorModeValue,
+  Center,
 } from "@chakra-ui/react";
 import { HamburgerIcon, StarIcon, SunIcon, MoonIcon } from "@chakra-ui/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_DATE } from "../store/types";
+import DatePicker from "../components/DatePicker";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const colorNav = useColorModeValue("gray.50", "gray.900");
   const iconButton = useColorModeValue(<SunIcon />, <MoonIcon />);
+  const dispatch = useDispatch();
+  const oldDate = useSelector((state: any) => state.date);
+
   return (
     <>
       <Head>
@@ -51,6 +59,14 @@ const Home: NextPage = () => {
             aria-label="ColorMode"
           />
         </Box>
+      </Flex>
+      <Flex alignItems="center" justifyContent="center">
+        <Center>
+          <Flex direction="column" alignItems="center"  my="32vh">
+            <Heading mb={2}>{!oldDate.loading && oldDate.date}</Heading>
+            <DatePicker />
+          </Flex>
+        </Center>
       </Flex>
     </>
   );
