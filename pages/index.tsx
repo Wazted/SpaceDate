@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import NextLink from 'next/link'
 import Head from "next/head";
 import {
   Flex,
@@ -43,7 +44,9 @@ const Home: NextPage = () => {
         borderBottom={colorMode === "light" ? "1px solid gray" : ""}
       >
         <Flex p="2" bg={colorNav}>
-          <Heading size="md">Space Date</Heading>
+          <NextLink _hover={{ textDecoration: 'none' }} href="/" passHref>
+            <Heading size="md">Space Date</Heading>
+          </NextLink>
         </Flex>
         <Spacer />
         <Box>
@@ -63,8 +66,9 @@ const Home: NextPage = () => {
       <Flex alignItems="center" justifyContent="center">
         <Center>
           <Flex direction="column" alignItems="center"  my="32vh">
-            <Heading mb={2}>{!oldDate.loading && oldDate.date}</Heading>
+            <Heading mb={2}>{!oldDate.loading && oldDate.date.split("T")[0]}</Heading>
             <DatePicker />
+            <NextLink href='/launchs'>go launchs</NextLink>
           </Flex>
         </Center>
       </Flex>

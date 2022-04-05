@@ -6,8 +6,10 @@ import { Provider } from "react-redux";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider store={store}>
-      <Component {...pageProps} />
+    <ChakraProvider>
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
     </ChakraProvider>
   );
 }

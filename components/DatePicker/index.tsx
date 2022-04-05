@@ -30,6 +30,7 @@ export default function DatePicker() {
       <ReactDatePicker
         selected={startDate}
         onChange={(date: Date) => {
+          date.setHours(0,0,0,0);
           setStartDate(date);
           dispatch({ type: SET_DATE, payload: date.toISOString() });
         }}
