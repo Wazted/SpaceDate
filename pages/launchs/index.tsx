@@ -39,12 +39,18 @@ const Launchs: NextPage = () => {
         )
         .then((res) => {
           const launchs = res.data;
-          console.log(launchs);
           setLaunchList(launchs);
           setLoadingList(false);
         })
         .catch((err) => {
-          console.log(err);
+          toast({
+            title: "Error get list",
+            description: err,
+            status: "error",
+            duration: 9000,
+            position: "top-right",
+            isClosable: true
+          });
           setLoadingList(false);
         });
     } else {

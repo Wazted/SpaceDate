@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Flex, Heading, Center, Spinner } from "@chakra-ui/react";
+import { Flex, Heading, Center, useToast } from "@chakra-ui/react";
 import { useEffect, useState, FunctionComponent } from "react";
 import LaunchsList from "../../components/LaunchsList";
 
@@ -16,6 +16,7 @@ type LaunchInfos = {
 };
 
 const FavorisList: FunctionComponent = () => {
+  const toast = useToast();
   const [launchList, setLaunchList] = useState<Array<LaunchInfos>>([]);
   const [favoris, setFavoris] = useState(
     JSON.parse(
@@ -24,7 +25,7 @@ const FavorisList: FunctionComponent = () => {
   );
 
   useEffect(() => {
-      favoris.forEach((elm: any) => {
+      favoris.forEach((elm: string) => {
         axios
           .get(`https://lldev.thespacedevs.com/2.2.0/launch/${elm}/`)
           .then((res) => {
@@ -32,7 +33,14 @@ const FavorisList: FunctionComponent = () => {
             setLaunchList((launchList) => launchList.concat(infos));
           })
           .catch((err) => {
-            console.log(err);
+            toast({
+              title: "Error get fav info",
+              description: err,
+              status: "error",
+              duration: 9000,
+              position: "top-right",
+              isClosable: true
+            });
           });
       });
   }, [favoris]);

@@ -14,6 +14,7 @@ import {
   Td,
   TableCaption,
   TableContainer,
+  useToast
 } from "@chakra-ui/react";
 import { StarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Key, SetStateAction, useEffect, useState, FunctionComponent } from "react";
@@ -21,6 +22,10 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 
 type LaunchInfos = {
+  id: string;
+  net: string;
+  image: string;
+  name: string;
   launch_service_provider: {
     name: String;
     logo_url: string;
@@ -38,6 +43,7 @@ type Props = {
 }
 
 const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updateFavs}) => {
+  const toast = useToast();
   const [moreInfos, setMoreInfos] = useState<LaunchInfos>();
   const [loadingLaunch, setLoadingLaunch] = useState(false);
   const [toggledLaunch, setToggledLaunch] = useState(-1);
@@ -80,12 +86,18 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
       .get(`https://lldev.thespacedevs.com/2.2.0/launch/${id}/`)
       .then((res) => {
         const infos = res.data;
-        console.log(infos);
         setMoreInfos(infos);
         setLoadingLaunch(false);
       })
       .catch((err) => {
-        console.log(err);
+        toast({
+          title: "Error get launch",
+          description: err,
+          status: "error",
+          duration: 9000,
+          position: "top-right",
+          isClosable: true
+        });
         setLoadingLaunch(false);
       });
   };
@@ -95,7 +107,6 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
       const isInWeek = moment(date).isBetween(birthWeekStart, birthWeekEnd, undefined, '[]');
       const isInDay = moment(date).isBetween(birthDayStart, birthDayEnd, undefined, '[]');
 
-      console.log(moment(date), birthWeekStart, birthWeekEnd, isInWeek, isInDay, date)
       if (isInDay) {
         return "green.200"
       } else if (isInWeek) {
@@ -108,7 +119,7 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
   return (
     <>
       {launchList &&
-        launchList.map((elm: any, idx: Key | any) => (
+        launchList.map((elm: LaunchInfos, idx: Key | any) => (
           <Flex
             key={idx}
             direction="column"
