@@ -3,39 +3,16 @@ import axios from "axios";
 import {
   Flex,
   Heading,
-  IconButton,
   Center,
-  Text,
   Button,
-  Image,
   Spinner,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
 } from "@chakra-ui/react";
-import { StarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
-import { Key, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import NavBar from "../../components/NavBar";
 import Router from "next/router";
 import LaunchsList from "../../components/LaunchsList";
-
-type LaunchInfos = {
-  launch_service_provider: {
-    name: String;
-    logo_url: string;
-    successful_landings: Number;
-    failed_landings: Number;
-    successful_launches: Number;
-    failed_launches: Number;
-  };
-};
 
 const Launchs: NextPage = () => {
   const [customLink, setCustomLink] = useState("");
