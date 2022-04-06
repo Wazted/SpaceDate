@@ -103,8 +103,8 @@ const Launchs: NextPage = () => {
             <RadioGroup onChange={chooseCustomLink} value={listType} mb={4}>
               <Stack direction="row">
                 <Radio value={"Year"}>Year</Radio>
-                <Radio value={"Week"}>Week</Radio>
-                <Radio value={"Day"}>Day</Radio>
+                <Radio value={"Week"} colorScheme='yellow'>Week</Radio>
+                <Radio value={"Day"} colorScheme='green'>Day</Radio>
               </Stack>
             </RadioGroup>
             <Flex mb={2}>

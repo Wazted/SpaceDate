@@ -17,6 +17,8 @@ import {
 } from "@chakra-ui/react";
 import { StarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import { Key, SetStateAction, useEffect, useState, FunctionComponent } from "react";
+import { useSelector } from "react-redux";
+import moment from "moment";
 
 type LaunchInfos = {
   launch_service_provider: {
@@ -44,6 +46,11 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
       (typeof window !== "undefined" && localStorage.getItem("favoris")) || "[]"
     )
   );
+  const selectedDate = useSelector((state: any) => state.date);
+  const birthDayStart = moment(selectedDate.date || "").set({hours: 0, minutes: 0, seconds: 0});
+  const birthDayEnd = moment(selectedDate.date || "").set({hours: 23, minutes: 59, seconds: 59});
+  const birthWeekStart = moment(selectedDate.date  || "").day(0).set({hours: 0, minutes: 0, seconds: 0});
+  const birthWeekEnd = moment(selectedDate.date  || "").day(6).set({hours: 23, minutes: 59, seconds: 59});
 
   const favContainId = (id: string) => {
     return favoris.includes(id);
@@ -83,6 +90,21 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
       });
   };
 
+  const backgroundOnDate = (date: string) => {
+    if (selectedDate.date) {
+      const isInWeek = moment(date).isBetween(birthWeekStart, birthWeekEnd, undefined, '[]');
+      const isInDay = moment(date).isBetween(birthDayStart, birthDayEnd, undefined, '[]');
+
+      console.log(moment(date), birthWeekStart, birthWeekEnd, isInWeek, isInDay, date)
+      if (isInDay) {
+        return "green.200"
+      } else if (isInWeek) {
+        return "orange.200"
+      }
+    }
+    return "gray.200"
+  }
+
   return (
     <>
       {launchList &&
@@ -91,7 +113,7 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
             key={idx}
             direction="column"
             alignItems="center"
-            bg="gray.200"
+            bg={backgroundOnDate(elm.net)}
             rounded="md"
             p={2}
             my={2}
