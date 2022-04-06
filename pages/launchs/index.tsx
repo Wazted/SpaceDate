@@ -62,7 +62,7 @@ const Launchs: NextPage = () => {
       });
       Router.push("/");
     }
-  }, [setLaunchList, customLink, selectedDate]);
+  }, [customLink, selectedDate, toast]);
 
   const setWeekCustomLink = () => {
     const url = `${urlDomain}?net__gte=${moment(selectedDate.date)

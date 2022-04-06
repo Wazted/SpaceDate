@@ -4,7 +4,10 @@ import { useEffect, useState, FunctionComponent } from "react";
 import LaunchsList from "../../components/LaunchsList";
 
 type LaunchInfos = {
-  id: String;
+  id: string;
+  net: string;
+  image: string;
+  name: string;
   launch_service_provider: {
     name: String;
     logo_url: string;
@@ -43,7 +46,7 @@ const FavorisList: FunctionComponent = () => {
             });
           });
       });
-  }, [favoris]);
+  }, [favoris, toast]);
 
   const refreshLaunchList = (id: String) => {
     setLaunchList((launchList) =>
