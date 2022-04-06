@@ -11,7 +11,7 @@ import {
   MenuItem,
   IconButton,
 } from "@chakra-ui/react";
-import { HamburgerIcon, StarIcon, ViewIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, TimeIcon, ViewIcon } from "@chakra-ui/icons";
 
 const NavBar: NextPage = () => {
   return (
@@ -28,8 +28,8 @@ const NavBar: NextPage = () => {
         <Menu>
           <MenuButton as={IconButton} icon={<HamburgerIcon />} mr="4" />
           <MenuList>
-            <NextLink href="/favoris" passHref>
-              <MenuItem icon={<StarIcon />}>Favoris</MenuItem>
+            <NextLink href="/" passHref>
+              <MenuItem icon={<TimeIcon />}>Home</MenuItem>
             </NextLink>
             <NextLink href="/launchs" passHref>
               <MenuItem icon={<ViewIcon />}>Launches</MenuItem>

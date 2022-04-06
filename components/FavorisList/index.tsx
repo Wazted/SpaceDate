@@ -1,8 +1,6 @@
-import type { NextPage } from "next";
 import axios from "axios";
 import { Flex, Heading, Center, Spinner } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import NavBar from "../../components/NavBar";
+import { useEffect, useState, FunctionComponent } from "react";
 import LaunchsList from "../../components/LaunchsList";
 
 type LaunchInfos = {
@@ -17,7 +15,7 @@ type LaunchInfos = {
   };
 };
 
-const Favoris: NextPage = () => {
+const FavorisList: FunctionComponent = () => {
   const [launchList, setLaunchList] = useState<Array<LaunchInfos>>([]);
   const [favoris, setFavoris] = useState(
     JSON.parse(
@@ -47,7 +45,6 @@ const Favoris: NextPage = () => {
 
   return (
     <>
-      <NavBar />
       <Flex alignItems="center" justifyContent="center">
         <Center>
           <Flex direction="column" alignItems="center">
@@ -64,4 +61,4 @@ const Favoris: NextPage = () => {
   );
 };
 
-export default Favoris;
+export default FavorisList;

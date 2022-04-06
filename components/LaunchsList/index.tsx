@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import axios from "axios";
 import {
   Flex,
@@ -17,7 +16,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { StarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { Key, SetStateAction, useEffect, useState } from "react";
+import { Key, SetStateAction, useEffect, useState, FunctionComponent } from "react";
 
 type LaunchInfos = {
   launch_service_provider: {
@@ -30,13 +29,13 @@ type LaunchInfos = {
   };
 };
 
-interface Props {
+type Props = {
   launchList: Array<LaunchInfos>;
   containsInfos?: boolean;
   updateFavs?: Function;
 }
 
-const LaunchsList: NextPage<Props> = (props) => {
+const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updateFavs}) => {
   const [moreInfos, setMoreInfos] = useState<LaunchInfos>();
   const [loadingLaunch, setLoadingLaunch] = useState(false);
   const [toggledLaunch, setToggledLaunch] = useState(-1);
@@ -62,8 +61,8 @@ const LaunchsList: NextPage<Props> = (props) => {
     oldStorage = oldStorage.filter((elm: string) => elm !== id);
     setFavoris(oldStorage);
     localStorage.setItem("favoris", JSON.stringify(oldStorage));
-    if (props.containsInfos && props.updateFavs) {
-      props.updateFavs(id);
+    if (containsInfos && updateFavs) {
+      updateFavs(id);
     }
   };
 
@@ -86,8 +85,8 @@ const LaunchsList: NextPage<Props> = (props) => {
 
   return (
     <>
-      {props.launchList &&
-        props.launchList.map((elm: any, idx: Key | any) => (
+      {launchList &&
+        launchList.map((elm: any, idx: Key | any) => (
           <Flex
             key={idx}
             direction="column"
@@ -98,6 +97,7 @@ const LaunchsList: NextPage<Props> = (props) => {
             my={2}
             w="full"
             position="relative"
+            minW="md"
           >
             <Button
               rightIcon={<StarIcon />}
@@ -131,17 +131,17 @@ const LaunchsList: NextPage<Props> = (props) => {
                 shadow="inner"
                 p={2}
               >
-                {!loadingLaunch && (props.containsInfos || moreInfos) ? (
+                {!loadingLaunch && (containsInfos || moreInfos) ? (
                   <>
                     <Text>
                       Launch provider:{" "}
-                      {props.containsInfos
+                      {containsInfos
                         ? elm.launch_service_provider.name
                         : moreInfos && moreInfos.launch_service_provider.name}
                     </Text>
                     <Image
                       src={
-                        props.containsInfos
+                        containsInfos
                           ? elm.launch_service_provider.logo_url
                           : moreInfos && moreInfos.launch_service_provider.logo_url
                       }
@@ -163,14 +163,14 @@ const LaunchsList: NextPage<Props> = (props) => {
                           <Tr>
                             <Td>Landings</Td>
                             <Td isNumeric>
-                              {props.containsInfos
+                              {containsInfos
                                 ? elm.launch_service_provider
                                     .successful_landings
                                 : moreInfos && moreInfos.launch_service_provider
                                     .successful_landings}
                             </Td>
                             <Td isNumeric>
-                              {props.containsInfos
+                              {containsInfos
                                 ? elm.launch_service_provider.failed_landings
                                 : moreInfos && moreInfos.launch_service_provider
                                     .failed_landings}
@@ -179,14 +179,14 @@ const LaunchsList: NextPage<Props> = (props) => {
                           <Tr>
                             <Td>Launches</Td>
                             <Td isNumeric>
-                              {props.containsInfos
+                              {containsInfos
                                 ? elm.launch_service_provider
                                     .successful_launches
                                 : moreInfos && moreInfos.launch_service_provider
                                     .successful_launches}
                             </Td>
                             <Td isNumeric>
-                              {props.containsInfos
+                              {containsInfos
                                 ? elm.launch_service_provider.failed_launches
                                 : moreInfos && moreInfos.launch_service_provider
                                     .failed_launches}
@@ -212,7 +212,7 @@ const LaunchsList: NextPage<Props> = (props) => {
             ) : (
               <IconButton
                 onClick={
-                  !props.containsInfos
+                  !containsInfos
                     ? () => getMoreInfosLaunch(elm.id, idx)
                     : () => setToggledLaunch(idx)
                 }

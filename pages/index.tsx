@@ -5,10 +5,12 @@ import {
   Flex,
   Heading,
   Center,
+  Link
 } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import { useSelector } from "react-redux";
 import DatePicker from "../components/DatePicker";
+import FavorisList from "../components/FavorisList";
 
 const Home: NextPage = () => {
   const oldDate = useSelector((state: any) => state.date);
@@ -25,12 +27,15 @@ const Home: NextPage = () => {
       </Head>
       <NavBar />
       <Flex alignItems="center" justifyContent="center">
-        <Center>
-          <Flex direction="column" alignItems="center"  my="32vh">
+        <Center flexDirection="column">
+          <Flex direction="column" alignItems="center"  my="48">
             <Heading mb={2}>{!oldDate.loading && oldDate.date.split("T")[0]}</Heading>
             <DatePicker />
-            <NextLink href='/launchs'>go launchs</NextLink>
+            <NextLink href='/launchs' passHref>
+              <Link>List all launches</Link>
+            </NextLink>
           </Flex>
+          <FavorisList />
         </Center>
       </Flex>
     </>
