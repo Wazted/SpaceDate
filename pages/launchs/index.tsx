@@ -3,50 +3,51 @@ import axios from "axios";
 import {
   Flex,
   Heading,
-  Spacer,
-  Box,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   IconButton,
-  useColorMode,
-  useColorModeValue,
   Center,
   Text,
   Button,
   Image,
   Spinner,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
 } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  StarIcon,
-  SunIcon,
-  MoonIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from "@chakra-ui/icons";
-import { useDispatch, useSelector } from "react-redux";
-import { Key, useEffect, useState } from "react";
+import { StarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { useSelector } from "react-redux";
+import { Key, SetStateAction, useEffect, useState } from "react";
 import moment from "moment";
-import NextLink from "next/link";
-import Router from 'next/router'
+import NavBar from "../../components/NavBar";
+import Router from "next/router";
+
+type LaunchInfos = {
+  launch_service_provider: {
+    name: String;
+    logo_url: string;
+    successful_landings: Number;
+    failed_landings: Number;
+    successful_launches: Number;
+    failed_launches: Number;
+  };
+};
 
 const Launchs: NextPage = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
   const [customLink, setCustomLink] = useState("");
-  const [moreInfos, setMoreInfos] = useState({});
+  const [moreInfos, setMoreInfos] = useState<LaunchInfos>();
   const [loadingLaunch, setLoadingLaunch] = useState(false);
   const [loadingList, setLoadingList] = useState(false);
   const [toggledLaunch, setToggledLaunch] = useState(-1);
+  const [favoris, setFavoris] = useState(JSON.parse(localStorage.getItem("favoris") || "[]"));
   const [launchList, setLaunchList] = useState({
     results: [],
     previous: "",
     next: "",
   });
-  const colorNav = useColorModeValue("gray.50", "gray.900");
-  const iconButton = useColorModeValue(<SunIcon />, <MoonIcon />);
-  const dispatch = useDispatch();
   const selectedDate = useSelector((state: any) => state.date);
 
   useEffect(() => {
@@ -71,12 +72,11 @@ const Launchs: NextPage = () => {
           setLoadingList(false);
         });
     } else {
-      Router.push('/')
+      Router.push("/");
     }
-  }, [setLaunchList, customLink]);
+  }, [setLaunchList, customLink, selectedDate]);
 
-  const getMoreInfosLaunch = (id: String, key: Key) => {
-    setMoreInfos({});
+  const getMoreInfosLaunch = (id: String, key: SetStateAction<number>) => {
     setToggledLaunch(key);
     setLoadingLaunch(true);
     axios
@@ -93,35 +93,27 @@ const Launchs: NextPage = () => {
       });
   };
 
+  const favContainId = (id: string) => {
+    return favoris.includes(id);
+  };
+
+  const addToFav = (id: string) => {
+    const oldStorage = JSON.parse(localStorage.getItem("favoris") || "[]");
+    oldStorage.push(id);
+    setFavoris(oldStorage);
+    localStorage.setItem("favoris", JSON.stringify(oldStorage));
+  };
+
+  const removeFromFav = (id: string) => {
+    let oldStorage = JSON.parse(localStorage.getItem("favoris") || "[]");
+    oldStorage = oldStorage.filter((elm: string) => elm !== id);
+    setFavoris(oldStorage);
+    localStorage.setItem("favoris", JSON.stringify(oldStorage));
+  };
+
   return (
     <>
-      <Flex
-        p="2"
-        bg={colorNav}
-        borderBottom={colorMode === "light" ? "1px solid gray" : ""}
-      >
-        <Flex p="2" bg={colorNav}>
-          <NextLink href="/" passHref>
-            <Heading _hover={{ textDecoration: "none" }} size="md">
-              Space Date
-            </Heading>
-          </NextLink>
-        </Flex>
-        <Spacer />
-        <Box>
-          <Menu>
-            <MenuButton as={IconButton} icon={<HamburgerIcon />} mr="4" />
-            <MenuList>
-              <MenuItem icon={<StarIcon />}>Favoris</MenuItem>
-            </MenuList>
-          </Menu>
-          <IconButton
-            onClick={toggleColorMode}
-            icon={iconButton}
-            aria-label="ColorMode"
-          />
-        </Box>
-      </Flex>
+      <NavBar />
       <Flex alignItems="center" justifyContent="center">
         <Center>
           <Flex direction="column" alignItems="center">
@@ -144,90 +136,144 @@ const Launchs: NextPage = () => {
                 next
               </Button>
             </Flex>
-            {!loadingList ?
+            {!loadingList ? (
               <>
                 {launchList.results &&
-                launchList.results.map((elm: any, idx: Key) => (
-                  <Flex
-                    key={idx}
-                    direction="column"
-                    alignItems="center"
-                    bg="gray.200"
-                    rounded="md"
-                    p={2}
-                    my={2}
-                    w='full'
-                  >
-                    <Image
-                      src={elm.image}
-                      alt="Launch image"
-                      boxSize="100px"
-                      objectFit="cover"
-                      rounded='full'
-                      shadow='lg'
-                      mb={2}
-                    />
-                    <Text fontWeight={"bold"}>{elm && elm.name}</Text>
-                    {idx === toggledLaunch ? (
-                      <Flex
-                        direction="column"
-                        alignItems="center"
-                        w={"full"}
-                        bg="white"
-                        rounded={"md"}
-                        shadow="inner"
-                        p={2}
+                  launchList.results.map((elm: any, idx: Key | any) => (
+                    <Flex
+                      key={idx}
+                      direction="column"
+                      alignItems="center"
+                      bg="gray.200"
+                      rounded="md"
+                      p={2}
+                      my={2}
+                      w="full"
+                      position="relative"
+                    >
+                      <Button
+                        rightIcon={<StarIcon />}
+                        colorScheme="pink"
+                        position="absolute"
+                        top={1}
+                        right={1}
+                        onClick={() => {
+                          favContainId(elm.id)
+                            ? removeFromFav(elm.id)
+                            : addToFav(elm.id);
+                        }}
                       >
-                        {!loadingLaunch ? (
-                          <>
-                            <Text>
-                              Launch provider:{" "}
-                              {moreInfos.launch_service_provider.name}
-                            </Text>
-                            <Image
-                              src={moreInfos.launch_service_provider.logo_url}
-                              alt="Launch image"
-                              boxSize="100px"
-                              objectFit="contain"
-                            />
-                            <Text>
-                              Landings:{" "}
-                              {
-                                moreInfos.launch_service_provider
-                                  .successful_landings
-                              }{" "}
-                              success |{" "}
-                              {moreInfos.launch_service_provider.failed_landings}{" "}
-                              fail
-                            </Text>
-                            <IconButton
-                              onClick={() => {
-                                setToggledLaunch(-1);
-                              }}
-                              aria-label="Info icon"
-                              icon={<ChevronUpIcon />}
-                              w='full'
-                              bg='white'
-                            />
-                          </>
-                        ) : (
-                          <Spinner />
-                        )}
-                      </Flex>
-                    ) : (
-                      <IconButton
-                        onClick={() => getMoreInfosLaunch(elm.id, idx)}
-                        aria-label="Info icon"
-                        icon={<ChevronDownIcon />}
-                        bg='white'
-                        w='full'
+                        {
+                          favContainId(elm.id)
+                            ? "Remove fav"
+                            : "Add fav"
+                        }
+                      </Button>
+                      <Image
+                        src={elm.image}
+                        alt="Launch image"
+                        boxSize="100px"
+                        objectFit="cover"
+                        rounded="full"
+                        shadow="lg"
+                        mb={2}
                       />
-                    )}
-                  </Flex>
-                ))}
+                      <Text fontWeight={"bold"}>{elm && elm.name}</Text>
+                      {idx === toggledLaunch ? (
+                        <Flex
+                          direction="column"
+                          alignItems="center"
+                          w={"full"}
+                          bg="white"
+                          rounded={"md"}
+                          shadow="inner"
+                          p={2}
+                        >
+                          {!loadingLaunch && moreInfos ? (
+                            <>
+                              <Text>
+                                Launch provider:{" "}
+                                {moreInfos.launch_service_provider.name}
+                              </Text>
+                              <Image
+                                src={moreInfos.launch_service_provider.logo_url}
+                                alt="Launch image"
+                                boxSize="100px"
+                                objectFit="contain"
+                              />
+                              <TableContainer>
+                                <Table variant="striped">
+                                  <TableCaption>Provider metrics</TableCaption>
+                                  <Thead>
+                                    <Tr>
+                                      <Th>Action</Th>
+                                      <Th isNumeric>Success</Th>
+                                      <Th isNumeric>Fail</Th>
+                                    </Tr>
+                                  </Thead>
+                                  <Tbody>
+                                    <Tr>
+                                      <Td>Landings</Td>
+                                      <Td isNumeric>
+                                        {
+                                          moreInfos.launch_service_provider
+                                            .successful_landings
+                                        }
+                                      </Td>
+                                      <Td isNumeric>
+                                        {
+                                          moreInfos.launch_service_provider
+                                            .failed_landings
+                                        }
+                                      </Td>
+                                    </Tr>
+                                    <Tr>
+                                      <Td>Launches</Td>
+                                      <Td isNumeric>
+                                        {
+                                          moreInfos.launch_service_provider
+                                            .successful_launches
+                                        }
+                                      </Td>
+                                      <Td isNumeric>
+                                        {
+                                          moreInfos.launch_service_provider
+                                            .failed_launches
+                                        }
+                                      </Td>
+                                    </Tr>
+                                  </Tbody>
+                                </Table>
+                              </TableContainer>
+                              <IconButton
+                                onClick={() => {
+                                  setToggledLaunch(-1);
+                                }}
+                                aria-label="Info icon"
+                                icon={<ChevronUpIcon />}
+                                w="full"
+                                bg="white"
+                              />
+                            </>
+                          ) : (
+                            <Spinner />
+                          )}
+                        </Flex>
+                      ) : (
+                        <IconButton
+                          onClick={() => getMoreInfosLaunch(elm.id, idx)}
+                          aria-label="Info icon"
+                          icon={<ChevronDownIcon />}
+                          bg="white"
+                          w="full"
+                        />
+                      )}
+                    </Flex>
+                  ))}
               </>
-              : <Spinner />
-            }
+            ) : (
+              <Spinner />
+            )}
             <Flex mt={2}>
               <Button
                 onClick={() => setCustomLink(launchList.previous)}
