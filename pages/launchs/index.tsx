@@ -1,6 +1,16 @@
 import type { NextPage } from "next";
 import axios from "axios";
-import { Flex, Heading, Center, Button, Spinner, RadioGroup, Stack, Radio, useToast } from "@chakra-ui/react";
+import {
+  Flex,
+  Heading,
+  Center,
+  Button,
+  Spinner,
+  RadioGroup,
+  Stack,
+  Radio,
+  useToast,
+} from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { SetStateAction, useEffect, useState } from "react";
 import moment from "moment";
@@ -49,7 +59,7 @@ const Launchs: NextPage = () => {
             status: "error",
             duration: 9000,
             position: "top-right",
-            isClosable: true
+            isClosable: true,
           });
           setLoadingList(false);
         });
@@ -58,7 +68,7 @@ const Launchs: NextPage = () => {
         title: "Pick a date (Ex: birthdate 🎂)",
         status: "info",
         duration: 9000,
-        position: "top-right"
+        position: "top-right",
       });
       Router.push("/");
     }
@@ -74,8 +84,12 @@ const Launchs: NextPage = () => {
   };
 
   const setDayCustomLink = () => {
-    const birthDayStart = moment(selectedDate.date).set({hours: 0, minutes: 0, seconds: 0}).toISOString();
-    const birthDayEnd = moment(selectedDate.date).set({hours: 23, minutes: 59, seconds: 59}).toISOString();
+    const birthDayStart = moment(selectedDate.date)
+      .set({ hours: 0, minutes: 0, seconds: 0 })
+      .toISOString();
+    const birthDayEnd = moment(selectedDate.date)
+      .set({ hours: 23, minutes: 59, seconds: 59 })
+      .toISOString();
     const url = `${urlDomain}?net__gte=${birthDayStart}&net__lte=${birthDayEnd}${defaultOpt}`;
     setCustomLink(url);
   };
@@ -95,7 +109,7 @@ const Launchs: NextPage = () => {
       default:
         break;
     }
-  }
+  };
 
   return (
     <>
@@ -109,8 +123,12 @@ const Launchs: NextPage = () => {
             <RadioGroup onChange={chooseCustomLink} value={listType} mb={4}>
               <Stack direction="row">
                 <Radio value={"Year"}>Year</Radio>
-                <Radio value={"Week"} colorScheme='yellow'>Week</Radio>
-                <Radio value={"Day"} colorScheme='green'>Day</Radio>
+                <Radio value={"Week"} colorScheme="yellow">
+                  Week
+                </Radio>
+                <Radio value={"Day"} colorScheme="green">
+                  Day
+                </Radio>
               </Stack>
             </RadioGroup>
             <Flex mb={2}>

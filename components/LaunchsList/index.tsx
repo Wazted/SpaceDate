@@ -14,10 +14,15 @@ import {
   Td,
   TableCaption,
   TableContainer,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { StarIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { Key, SetStateAction, useEffect, useState, FunctionComponent } from "react";
+import {
+  Key,
+  SetStateAction,
+  useState,
+  FunctionComponent,
+} from "react";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
@@ -40,9 +45,13 @@ type Props = {
   launchList: Array<LaunchInfos>;
   containsInfos?: boolean;
   updateFavs?: Function;
-}
+};
 
-const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updateFavs}) => {
+const LaunchsList: FunctionComponent<Props> = ({
+  launchList,
+  containsInfos,
+  updateFavs,
+}) => {
   const toast = useToast();
   const [moreInfos, setMoreInfos] = useState<LaunchInfos>();
   const [loadingLaunch, setLoadingLaunch] = useState(false);
@@ -53,10 +62,22 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
     )
   );
   const selectedDate = useSelector((state: any) => state.date);
-  const birthDayStart = moment(selectedDate.date || "").set({hours: 0, minutes: 0, seconds: 0});
-  const birthDayEnd = moment(selectedDate.date || "").set({hours: 23, minutes: 59, seconds: 59});
-  const birthWeekStart = moment(selectedDate.date  || "").day(0).set({hours: 0, minutes: 0, seconds: 0});
-  const birthWeekEnd = moment(selectedDate.date  || "").day(6).set({hours: 23, minutes: 59, seconds: 59});
+  const birthDayStart = moment(selectedDate.date || "").set({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const birthDayEnd = moment(selectedDate.date || "").set({
+    hours: 23,
+    minutes: 59,
+    seconds: 59,
+  });
+  const birthWeekStart = moment(selectedDate.date || "")
+    .day(0)
+    .set({ hours: 0, minutes: 0, seconds: 0 });
+  const birthWeekEnd = moment(selectedDate.date || "")
+    .day(6)
+    .set({ hours: 23, minutes: 59, seconds: 59 });
 
   const favContainId = (id: string) => {
     return favoris.includes(id);
@@ -96,7 +117,7 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
           status: "error",
           duration: 9000,
           position: "top-right",
-          isClosable: true
+          isClosable: true,
         });
         setLoadingLaunch(false);
       });
@@ -104,17 +125,27 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
 
   const backgroundOnDate = (date: string) => {
     if (selectedDate.date) {
-      const isInWeek = moment(date).isBetween(birthWeekStart, birthWeekEnd, undefined, '[]');
-      const isInDay = moment(date).isBetween(birthDayStart, birthDayEnd, undefined, '[]');
+      const isInWeek = moment(date).isBetween(
+        birthWeekStart,
+        birthWeekEnd,
+        undefined,
+        "[]"
+      );
+      const isInDay = moment(date).isBetween(
+        birthDayStart,
+        birthDayEnd,
+        undefined,
+        "[]"
+      );
 
       if (isInDay) {
-        return "green.200"
+        return "green.200";
       } else if (isInWeek) {
-        return "orange.200"
+        return "orange.200";
       }
     }
-    return "gray.200"
-  }
+    return "gray.200";
+  };
 
   return (
     <>
@@ -176,7 +207,8 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
                       src={
                         containsInfos
                           ? elm.launch_service_provider.logo_url
-                          : moreInfos && moreInfos.launch_service_provider.logo_url
+                          : moreInfos &&
+                            moreInfos.launch_service_provider.logo_url
                       }
                       alt="Launch image"
                       boxSize="100px"
@@ -199,13 +231,15 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
                               {containsInfos
                                 ? elm.launch_service_provider
                                     .successful_landings
-                                : moreInfos && moreInfos.launch_service_provider
+                                : moreInfos &&
+                                  moreInfos.launch_service_provider
                                     .successful_landings}
                             </Td>
                             <Td isNumeric>
                               {containsInfos
                                 ? elm.launch_service_provider.failed_landings
-                                : moreInfos && moreInfos.launch_service_provider
+                                : moreInfos &&
+                                  moreInfos.launch_service_provider
                                     .failed_landings}
                             </Td>
                           </Tr>
@@ -215,13 +249,15 @@ const LaunchsList: FunctionComponent<Props> = ({launchList, containsInfos, updat
                               {containsInfos
                                 ? elm.launch_service_provider
                                     .successful_launches
-                                : moreInfos && moreInfos.launch_service_provider
+                                : moreInfos &&
+                                  moreInfos.launch_service_provider
                                     .successful_launches}
                             </Td>
                             <Td isNumeric>
                               {containsInfos
                                 ? elm.launch_service_provider.failed_launches
-                                : moreInfos && moreInfos.launch_service_provider
+                                : moreInfos &&
+                                  moreInfos.launch_service_provider
                                     .failed_launches}
                             </Td>
                           </Tr>

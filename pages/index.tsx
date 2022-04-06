@@ -1,12 +1,7 @@
 import type { NextPage } from "next";
-import NextLink from 'next/link'
+import NextLink from "next/link";
 import Head from "next/head";
-import {
-  Flex,
-  Heading,
-  Center,
-  Link
-} from "@chakra-ui/react";
+import { Flex, Heading, Center, Link } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import { useSelector } from "react-redux";
 import DatePicker from "../components/DatePicker";
@@ -28,10 +23,12 @@ const Home: NextPage = () => {
       <NavBar />
       <Flex alignItems="center" justifyContent="center">
         <Center flexDirection="column">
-          <Flex direction="column" alignItems="center"  my="48">
-            <Heading mb={2}>{!oldDate.loading && oldDate.date.split("T")[0]}</Heading>
+          <Flex direction="column" alignItems="center" my="48">
+            <Heading mb={2}>
+              {!oldDate.loading && oldDate.date.split("T")[0]}
+            </Heading>
             <DatePicker />
-            <NextLink href='/launchs' passHref>
+            <NextLink href="/launchs" passHref>
               <Link>List all launches</Link>
             </NextLink>
           </Flex>
