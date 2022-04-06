@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Key, useEffect, useState } from "react";
 import moment from "moment";
 import NextLink from "next/link";
+import Router from 'next/router'
 
 const Launchs: NextPage = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -69,6 +70,8 @@ const Launchs: NextPage = () => {
           console.log(err);
           setLoadingList(false);
         });
+    } else {
+      Router.push('/')
     }
   }, [setLaunchList, customLink]);
 
